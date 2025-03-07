@@ -1,44 +1,22 @@
 import sys
-import subprocess
-import pkg_resources
-
-def install_requirements():
-    """Install required packages if they're not already installed."""
-    required = {'pandas', 'openpyxl'}  # Added openpyxl for Excel support
-    installed = {pkg.key for pkg in pkg_resources.working_set}
-    missing = required - installed
-    
-    if missing:
-        print("Installing required packages...")
-        try:
-            # Ensure pip is available
-            subprocess.check_call([sys.executable, '-m', 'pip', '--version'])
-            
-            # Install missing packages
-            for package in missing:
-                print(f"Installing {package}...")
-                subprocess.check_call([
-                    sys.executable, 
-                    '-m', 
-                    'pip', 
-                    'install', 
-                    package,
-                    '--quiet'
-                ])
-            print("All required packages installed successfully!")
-        except subprocess.CalledProcessError as e:
-            print(f"Failed to install required packages: {e}")
-            sys.exit(1)
-
-# Run package installation before imports
-if __name__ == '__main__':
-    install_requirements()
-
-# Now import the required packages
 import pandas as pd
 import json
 import os
 import argparse
+
+def check_requirements():
+    """Check if required packages are installed."""
+    try:
+        import pandas
+        import openpyxl  # Required for Excel support
+    except ImportError:
+        print("Required packages are missing. Installing them now...")
+        print("Please run: pip install pandas openpyxl")
+        sys.exit(1)
+
+# Run package check before imports
+if __name__ == '__main__':
+    check_requirements()
 
 def validate_excel_structure(sheet_data):
     """Ensure required columns exist in the DataFrame."""
@@ -209,16 +187,10 @@ def log_error(e):
         log_file.write(f"Error: {e}\n")
     print(f"An error occurred: {e}")
 
-# Usage Example
-generate_exam_html("/Users/coding/Documents/Exam.xlsx", "/Users/coding/Documents/", sample_size=60)
-
-# Remove the hardcoded example usage
-# generate_exam_html("/Users/coding/Documents/Exam.xlsx", "/Users/coding/Documents/", sample_size=60)
-
 def main():
     parser = argparse.ArgumentParser(description='Generate exam HTML from Excel file')
     parser.add_argument('--excel', '-e', 
-                       required=True,  # Make this required
+                       required=True,
                        help='Path to Excel file')
     parser.add_argument('--output', '-o', 
                        default='output',
@@ -230,20 +202,11 @@ def main():
     
     args = parser.parse_args()
     
-    # Validate Excel file exists
-    if not os.path.exists(args.excel):
-        print(f"Error: Excel file not found: {args.excel}")
-        sys.exit(1)
-    
-    # Create output directory if it doesn't exist
-    os.makedirs(args.output, exist_ok=True)
-    
     try:
         generate_exam_html(args.excel, args.output, args.sample_size)
         print(f"Successfully generated exam in {args.output}")
     except Exception as e:
-        log_error(e)
-        print(f"Failed to generate exam. Check error_log.txt for details.")
+        print(f"Error: {str(e)}")
         sys.exit(1)
 
 if __name__ == "__main__":
