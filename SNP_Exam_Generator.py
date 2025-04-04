@@ -155,7 +155,7 @@ def create_html_content(questions, new_exam_number):
                 correct.forEach(correctAns => {{
                     // Escape special characters in the correct answer
                     const escapedCorrectAns = correctAns.replace(/([!"#$%&'()*+,.\/:;<=>?@[\\\]^`{|}~])/g, '\\$1');
-                    const correctLabel = questionDiv.querySelector(`label[for="q${{key}}_${{escapedCorrectAns.replace(/\\s/g, '_')}}"]`);
+                    const correctLabel = questionDiv.querySelector(`label[for="q${{key}}_${{escapedCorrectAns.replace(/\\s/g, '_')}"]`);
                     if (correctLabel) {{
                         correctLabel.parentElement.classList.add('correct-answer');
                     }}
