@@ -1,0 +1,1733 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Scoped Exam Test 5</title>
+    <style>
+        body {font-family: Arial, sans-serif;}
+        h1 {text-align: center;}
+        .test-container {margin-bottom: 50px; border: 1px solid #ccc; padding: 20px; border-radius: 8px;}
+        .question {margin-bottom: 20px; padding: 10px;}
+        .options {margin-left: 20px;}
+        .metadata {font-size: 0.9em; color: grey; margin-top: 5px;}
+        .correct {background-color: #dff0d8;}
+        .incorrect {background-color: #f2dede;}
+        .missing {background-color: #d9edf7;}
+        .correct-answer {color: green; font-weight: bold;}
+        .label-container {display: inline-block; margin-left: 5px;}
+    </style>
+    <script>
+        const correctAnswers = {
+    "1": [
+        "Self-Service"
+    ],
+    "2": [
+        "Include attachment from email"
+    ],
+    "3": [
+        "Integration Hub"
+    ],
+    "4": [
+        "UI Actions can execute both client-side and server-side.",
+        "Data Policy can be run as a UI policy client-side.",
+        "Business rules are not real-time and do not monitor fields on a form."
+    ],
+    "5": [
+        "Under Request Something"
+    ],
+    "6": [
+        "CMDB 360",
+        "Multisource CMDB"
+    ],
+    "7": [
+        "Maintain Items"
+    ],
+    "8": [
+        "Activity Stream"
+    ],
+    "9": [
+        "The screen reader speaks new content without disturbing the current flow.",
+        "Text-to-speech labels that you hear match the labels you see on the screen.",
+        "Text size can be increased to 200% through your browser settings."
+    ],
+    "10": [
+        "Read-only",
+        "Mandatory",
+        "Visible/hidden"
+    ],
+    "11": [
+        "Task task"
+    ],
+    "12": [
+        "Tables",
+        "Tables & Columns"
+    ],
+    "13": [
+        "The requested item is automatically set to Closed Complete."
+    ],
+    "14": [
+        "Sitemap Generator record"
+    ],
+    "15": [
+        "Importing Microsoft Word files",
+        "Integrating with a WebDAV compliant source",
+        "Creating articles directly in the ServiceNow platform"
+    ],
+    "16": [
+        "It is a wizard-like tool that provides a comprehensive solution for managing CIs.",
+        "It can create policies that govern CI life cycle stages such as retirement and deletion.",
+        "It is a policy-driven framework for managing CI life cycle operations."
+    ],
+    "17": [
+        "Role"
+    ],
+    "18": [
+        "It contains a collection of orderable products and services."
+    ],
+    "19": [
+        "Service Level Agreements"
+    ],
+    "20": [
+        "security_admin"
+    ],
+    "21": [
+        "Task task"
+    ],
+    "22": [
+        "To integrate with 3rd party systems.",
+        "To orchestrate business processes across services with little technical user knowledge.",
+        "To reduce technical debt, such as reducing scripting to simplify upgrades and deployments."
+    ],
+    "23": [
+        "Chart"
+    ],
+    "24": [
+        "Compact Cards"
+    ],
+    "25": [
+        "Teams"
+    ],
+    "26": [
+        "Knowledge Management"
+    ],
+    "27": [
+        "Guided"
+    ],
+    "28": [
+        "Content frame",
+        "Banner frame",
+        "Application navigator"
+    ],
+    "29": [
+        "Database Views"
+    ],
+    "30": [
+        "UI Policy Action"
+    ],
+    "31": [
+        "From the Field Types tab, drag the field type onto the form and configure the field."
+    ],
+    "32": [
+        "Now Assist"
+    ],
+    "33": [
+        "Business Rule"
+    ],
+    "34": [
+        "Administrators will have limited access to certain features when impersonating some scoped app admins.",
+        "Non-admin users with the impersonator role will have limited access if they impersonate admin users."
+    ],
+    "35": [
+        "Predictive Intelligence"
+    ],
+    "36": [
+        "Record producer"
+    ],
+    "37": [
+        "OnSubmit()",
+        "OnLoad()",
+        "OnCellEdit()",
+        "OnChange()"
+    ],
+    "38": [
+        "It is a set of interconnected applications and hosts configured to offer a service to an organisation."
+    ],
+    "39": [
+        "Knowledge Article",
+        "Knowledge Block",
+        "Knowledge Base"
+    ],
+    "40": [
+        "Users with dashboard_admin role",
+        "Dashboard owner",
+        "Users with edit access to the dashboard"
+    ]
+};
+        
+        function checkAnswers(testId) {
+            let score = 0;
+            const totalQuestions = document.querySelectorAll(`#${testId} .question`).length;
+            
+            for (let i = 1; i <= totalQuestions; i++) {
+                const key = i.toString();
+                const questionDiv = document.querySelector(`#${testId} div[data-question="${key}"]`);
+                
+                if (!questionDiv) continue;
+                
+                const selectedOptions = Array.from(
+                    questionDiv.querySelectorAll('input:checked')
+                ).map(opt => opt.value.trim());
+                
+                // Remove any existing status classes
+                questionDiv.classList.remove('correct', 'incorrect', 'missing');
+                
+                // Reset previous markings
+                questionDiv.querySelectorAll('.label-container').forEach(label => {
+                    label.classList.remove('correct-answer');
+                });
+                
+                // Skip questions with no correct answers defined
+                if (!correctAnswers[key]) continue;
+                
+                const correct = correctAnswers[key].map(ans => ans.trim());
+                
+                if (selectedOptions.length === 0) {
+                    // No answer selected
+                    questionDiv.classList.add('missing');
+                } else {
+                    // Sort both arrays for comparison
+                    const sortedSelected = selectedOptions.sort();
+                    const sortedCorrect = correct.sort();
+                    const isEqual = JSON.stringify(sortedSelected) === JSON.stringify(sortedCorrect);
+                    
+                    if (isEqual) {
+                        score++;
+                        questionDiv.classList.add('correct');
+                    } else {
+                        questionDiv.classList.add('incorrect');
+                    }
+                }
+                
+                // Highlight correct answers
+                correct.forEach(correctAns => {
+                    // Escape special characters in the correct answer
+                    const escapedCorrectAns = correctAns.replace(/([!"#$%&'()*+,.\/:;<=>?@[\]]^`{|}~])/g, '\$1');
+                    const correctLabel = questionDiv.querySelector(`label[for="q${key}_${escapedCorrectAns.replace(/\s/g, '_')}"]`);
+                    if (correctLabel) {
+                        correctLabel.parentElement.classList.add('correct-answer');
+                    }
+                });
+            }
+            
+            document.querySelector(`#${testId} .score`).textContent = 
+                `Your score is: ${score} out of ${Object.keys(correctAnswers).length}`;
+        }
+    </script>
+</head>
+<body>
+    <h1>Random Scoped Exam Test 5</h1>
+    <div id="test1" class="test-container">
+        <div class="score">Your score is: 0 out of 40</div>
+
+        <div class="question" data-question="1">
+            <b>Question 1: Which of the following applications is available to all users?</b>
+            
+            <div class="metadata">Exam 1 | Question 58 | Difficulty: Easy | Domain: Platform Overview and Navigation</div>
+            <div class="options">
+        
+                    <div>
+                        <input type="radio" name="question1" id="q1_Facilities" value="Facilities">
+                        <div class="label-container">
+                            <label for="q1_Facilities">Facilities</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question1" id="q1_Incident" value="Incident">
+                        <div class="label-container">
+                            <label for="q1_Incident">Incident</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question1" id="q1_Self-Service" value="Self-Service">
+                        <div class="label-container">
+                            <label for="q1_Self-Service">Self-Service</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question1" id="q1_Change" value="Change">
+                        <div class="label-container">
+                            <label for="q1_Change">Change</label>
+                        </div>
+                    </div>
+                </div></div>
+        <div class="question" data-question="2">
+            <b>Question 2: Which option in the Email Client Template allows you to include attachments from emails while replying to or forwarding emails?</b>
+            
+            <div class="metadata">Exam 4 | Question 14 | Difficulty: Hard | Domain: Configuring Applications for Collaboration</div>
+            <div class="options">
+        
+                    <div>
+                        <input type="radio" name="question2" id="q2_glide.email.inbound.image_sys_attachment.filter.action _system_property" value="glide.email.inbound.image_sys_attachment.filter.action  system property">
+                        <div class="label-container">
+                            <label for="q2_glide.email.inbound.image_sys_attachment.filter.action _system_property">glide.email.inbound.image_sys_attachment.filter.action  system property</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question2" id="q2_Attachment_Send_Action" value="Attachment Send Action">
+                        <div class="label-container">
+                            <label for="q2_Attachment_Send_Action">Attachment Send Action</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question2" id="q2_Email_Attachment_Conditions" value="Email Attachment Conditions">
+                        <div class="label-container">
+                            <label for="q2_Email_Attachment_Conditions">Email Attachment Conditions</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question2" id="q2_&quot;Attachment_is_true_condition&quot;" value="&quot;Attachment is true condition&quot;">
+                        <div class="label-container">
+                            <label for="q2_&quot;Attachment_is_true_condition&quot;">&quot;Attachment is true condition&quot;</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question2" id="q2_Include_attachment_from_email" value="Include attachment from email">
+                        <div class="label-container">
+                            <label for="q2_Include_attachment_from_email">Include attachment from email</label>
+                        </div>
+                    </div>
+                </div></div>
+        <div class="question" data-question="3">
+            <b>Question 3: Which ServiceNow product enables you to integrate with 3rd party applications without scripting?</b>
+            
+            <div class="metadata">Exam 2 | Question 45 | Difficulty: Easy | Domain: Data Migration and Integration</div>
+            <div class="options">
+        
+                    <div>
+                        <input type="radio" name="question3" id="q3_Integration_Hub" value="Integration Hub">
+                        <div class="label-container">
+                            <label for="q3_Integration_Hub">Integration Hub</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question3" id="q3_Visual_Task_Boards" value="Visual Task Boards">
+                        <div class="label-container">
+                            <label for="q3_Visual_Task_Boards">Visual Task Boards</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question3" id="q3_Service_Portal" value="Service Portal">
+                        <div class="label-container">
+                            <label for="q3_Service_Portal">Service Portal</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question3" id="q3_Flow_Designer" value="Flow Designer">
+                        <div class="label-container">
+                            <label for="q3_Flow_Designer">Flow Designer</label>
+                        </div>
+                    </div>
+                </div></div>
+        <div class="question" data-question="4">
+            <b>Question 4: Which of the following are true statements about platform scripting?</b>
+            <br><i>Select 3 Answers from the below options.</i>
+            <div class="metadata">Exam 3 | Question 7 | Difficulty: Medium | Domain: Data Migration and Integration</div>
+            <div class="options">
+        
+                    <div>
+                        <input type="checkbox" name="question4" id="q4_UI_Actions_can_execute_both_client-side_and_server-side." value="UI Actions can execute both client-side and server-side.">
+                        <div class="label-container">
+                            <label for="q4_UI_Actions_can_execute_both_client-side_and_server-side.">UI Actions can execute both client-side and server-side.</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="checkbox" name="question4" id="q4_Client_scripts_can_only_execute_on_the_browser_but_not_when_a_database_lookup_is_needed." value="Client scripts can only execute on the browser but not when a database lookup is needed.">
+                        <div class="label-container">
+                            <label for="q4_Client_scripts_can_only_execute_on_the_browser_but_not_when_a_database_lookup_is_needed.">Client scripts can only execute on the browser but not when a database lookup is needed.</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="checkbox" name="question4" id="q4_Data_Policy_can_be_run_as_a_UI_policy_client-side." value="Data Policy can be run as a UI policy client-side.">
+                        <div class="label-container">
+                            <label for="q4_Data_Policy_can_be_run_as_a_UI_policy_client-side.">Data Policy can be run as a UI policy client-side.</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="checkbox" name="question4" id="q4_Business_rules_are_not_real-time_and_do_not_monitor_fields_on_a_form." value="Business rules are not real-time and do not monitor fields on a form.">
+                        <div class="label-container">
+                            <label for="q4_Business_rules_are_not_real-time_and_do_not_monitor_fields_on_a_form.">Business rules are not real-time and do not monitor fields on a form.</label>
+                        </div>
+                    </div>
+                </div></div>
+        <div class="question" data-question="5">
+            <b>Question 5: How do end-users typically access the service catalogue when using the Service Portal?</b>
+            
+            <div class="metadata">Exam 3 | Question 40 | Difficulty: Easy | Domain: Self-Service & Automation</div>
+            <div class="options">
+        
+                    <div>
+                        <input type="radio" name="question5" id="q5_Under_Request_Something" value="Under Request Something">
+                        <div class="label-container">
+                            <label for="q5_Under_Request_Something">Under Request Something</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question5" id="q5_In_the_Knowledge_Base" value="In the Knowledge Base">
+                        <div class="label-container">
+                            <label for="q5_In_the_Knowledge_Base">In the Knowledge Base</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question5" id="q5_In_the_Community" value="In the Community">
+                        <div class="label-container">
+                            <label for="q5_In_the_Community">In the Community</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question5" id="q5_Under_System_Status" value="Under System Status">
+                        <div class="label-container">
+                            <label for="q5_Under_System_Status">Under System Status</label>
+                        </div>
+                    </div>
+                </div></div>
+        <div class="question" data-question="6">
+            <b>Question 6: Which CMDB feature tracks the activities and history of data sources as they insert and update Cl attributes?</b>
+            <br><i>Select 2 Answers from the below options.</i>
+            <div class="metadata">Exam 1 | Question 47 | Difficulty: Hard | Domain: Database Management</div>
+            <div class="options">
+        
+                    <div>
+                        <input type="checkbox" name="question6" id="q6_CMDB_360" value="CMDB 360">
+                        <div class="label-container">
+                            <label for="q6_CMDB_360">CMDB 360</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="checkbox" name="question6" id="q6_CMDB_Data_Manager" value="CMDB Data Manager">
+                        <div class="label-container">
+                            <label for="q6_CMDB_Data_Manager">CMDB Data Manager</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="checkbox" name="question6" id="q6_Multisource_CMDB" value="Multisource CMDB">
+                        <div class="label-container">
+                            <label for="q6_Multisource_CMDB">Multisource CMDB</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="checkbox" name="question6" id="q6_CI_Class_Manager" value="CI Class Manager">
+                        <div class="label-container">
+                            <label for="q6_CI_Class_Manager">CI Class Manager</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="checkbox" name="question6" id="q6_CMDB_CI_Lifecycle_Management" value="CMDB CI Lifecycle Management">
+                        <div class="label-container">
+                            <label for="q6_CMDB_CI_Lifecycle_Management">CMDB CI Lifecycle Management</label>
+                        </div>
+                    </div>
+                </div></div>
+        <div class="question" data-question="7">
+            <b>Question 7: Where does the System Administrator navigate to edit a catalogue item?</b>
+            
+            <div class="metadata">Exam 1 | Question 10 | Difficulty: Easy | Domain: Self-Service & Automation</div>
+            <div class="options">
+        
+                    <div>
+                        <input type="radio" name="question7" id="q7_Create_Incident" value="Create Incident">
+                        <div class="label-container">
+                            <label for="q7_Create_Incident">Create Incident</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question7" id="q7_Service_Catalogs" value="Service Catalogs">
+                        <div class="label-container">
+                            <label for="q7_Service_Catalogs">Service Catalogs</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question7" id="q7_Service_Portal" value="Service Portal">
+                        <div class="label-container">
+                            <label for="q7_Service_Portal">Service Portal</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question7" id="q7_Maintain_Items" value="Maintain Items">
+                        <div class="label-container">
+                            <label for="q7_Maintain_Items">Maintain Items</label>
+                        </div>
+                    </div>
+                </div></div>
+        <div class="question" data-question="8">
+            <b>Question 8: What allows users to see a time-stamped history of all actions taken within a record?</b>
+            
+            <div class="metadata">Exam 3 | Question 46 | Difficulty: Easy | Domain: Configuring Applications for Collaboration</div>
+            <div class="options">
+        
+                    <div>
+                        <input type="radio" name="question8" id="q8_Form_Activity" value="Form Activity">
+                        <div class="label-container">
+                            <label for="q8_Form_Activity">Form Activity</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question8" id="q8_Form_History" value="Form History">
+                        <div class="label-container">
+                            <label for="q8_Form_History">Form History</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question8" id="q8_Favourites" value="Favourites">
+                        <div class="label-container">
+                            <label for="q8_Favourites">Favourites</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question8" id="q8_Activity_Stream" value="Activity Stream">
+                        <div class="label-container">
+                            <label for="q8_Activity_Stream">Activity Stream</label>
+                        </div>
+                    </div>
+                </div></div>
+        <div class="question" data-question="9">
+            <b>Question 9: Which of the following are the accessibility enhancements in the Service Portal application?</b>
+            <br><i>Select 3 Answers from the below options.</i>
+            <div class="metadata">Exam 3 | Question 13 | Difficulty: Hard | Domain: Instance Configuration</div>
+            <div class="options">
+        
+                    <div>
+                        <input type="checkbox" name="question9" id="q9_Content_can_be_zoomed_up_indefinitely_without_loss_of_functionality." value="Content can be zoomed up indefinitely without loss of functionality.">
+                        <div class="label-container">
+                            <label for="q9_Content_can_be_zoomed_up_indefinitely_without_loss_of_functionality.">Content can be zoomed up indefinitely without loss of functionality.</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="checkbox" name="question9" id="q9_The_screen_reader_speaks_new_content_without_disturbing_the_current_flow." value="The screen reader speaks new content without disturbing the current flow.">
+                        <div class="label-container">
+                            <label for="q9_The_screen_reader_speaks_new_content_without_disturbing_the_current_flow.">The screen reader speaks new content without disturbing the current flow.</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="checkbox" name="question9" id="q9_Text-to-speech_labels_that_you_hear_match_the_labels_you_see_on_the_screen." value="Text-to-speech labels that you hear match the labels you see on the screen.">
+                        <div class="label-container">
+                            <label for="q9_Text-to-speech_labels_that_you_hear_match_the_labels_you_see_on_the_screen.">Text-to-speech labels that you hear match the labels you see on the screen.</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="checkbox" name="question9" id="q9_Text_size_can_be_increased_to_200%_through_your_browser_settings." value="Text size can be increased to 200% through your browser settings.">
+                        <div class="label-container">
+                            <label for="q9_Text_size_can_be_increased_to_200%_through_your_browser_settings.">Text size can be increased to 200% through your browser settings.</label>
+                        </div>
+                    </div>
+                </div></div>
+        <div class="question" data-question="10">
+            <b>Question 10: What field attributes can a UI policy action change on a form?</b>
+            <br><i>Select 3 Answers from the below options.</i>
+            <div class="metadata">Exam 3 | Question 49 | Difficulty: Medium | Domain: Data Migration and Integration</div>
+            <div class="options">
+        
+                    <div>
+                        <input type="checkbox" name="question10" id="q10_Prevent_cell_editing" value="Prevent cell editing">
+                        <div class="label-container">
+                            <label for="q10_Prevent_cell_editing">Prevent cell editing</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="checkbox" name="question10" id="q10_Change_colour" value="Change colour">
+                        <div class="label-container">
+                            <label for="q10_Change_colour">Change colour</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="checkbox" name="question10" id="q10_Read-only" value="Read-only">
+                        <div class="label-container">
+                            <label for="q10_Read-only">Read-only</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="checkbox" name="question10" id="q10_Mandatory" value="Mandatory">
+                        <div class="label-container">
+                            <label for="q10_Mandatory">Mandatory</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="checkbox" name="question10" id="q10_Visible/hidden" value="Visible/hidden">
+                        <div class="label-container">
+                            <label for="q10_Visible/hidden">Visible/hidden</label>
+                        </div>
+                    </div>
+                </div></div>
+        <div class="question" data-question="11">
+            <b>Question 11: Which of the following is an example of a base table that is extended but is not extending another table?</b>
+            
+            <div class="metadata">Exam 1 | Question 52 | Difficulty: Easy | Domain: Database Management</div>
+            <div class="options">
+        
+                    <div>
+                        <input type="radio" name="question11" id="q11_Incident_incident" value="Incident incident">
+                        <div class="label-container">
+                            <label for="q11_Incident_incident">Incident incident</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question11" id="q11_Change_Request_change_request" value="Change Request change_request">
+                        <div class="label-container">
+                            <label for="q11_Change_Request_change_request">Change Request change_request</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question11" id="q11_Task_task" value="Task task">
+                        <div class="label-container">
+                            <label for="q11_Task_task">Task task</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question11" id="q11_Business_Service_cmdb_ci_service" value="Business Service cmdb_ci_service">
+                        <div class="label-container">
+                            <label for="q11_Business_Service_cmdb_ci_service">Business Service cmdb_ci_service</label>
+                        </div>
+                    </div>
+                </div></div>
+        <div class="question" data-question="12">
+            <b>Question 12: Which modules can you use to create a new table?</b>
+            <br><i>Select 2 Answers from the below options.</i>
+            <div class="metadata">Exam 2 | Question 57 | Difficulty: Medium | Domain: Instance Configuration</div>
+            <div class="options">
+        
+                    <div>
+                        <input type="checkbox" name="question12" id="q12_Tables" value="Tables">
+                        <div class="label-container">
+                            <label for="q12_Tables">Tables</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="checkbox" name="question12" id="q12_Import_Tables" value="Import Tables">
+                        <div class="label-container">
+                            <label for="q12_Import_Tables">Import Tables</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="checkbox" name="question12" id="q12_Tables_&amp;_Columns" value="Tables &amp; Columns">
+                        <div class="label-container">
+                            <label for="q12_Tables_&amp;_Columns">Tables &amp; Columns</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="checkbox" name="question12" id="q12_Create_New" value="Create New">
+                        <div class="label-container">
+                            <label for="q12_Create_New">Create New</label>
+                        </div>
+                    </div>
+                </div></div>
+        <div class="question" data-question="13">
+            <b>Question 13: A fulfiller has completed all tasks for one of the items in a request, and the tasks are set to Closed.
+What happens in the workflow?</b>
+            
+            <div class="metadata">Exam 4 | Question 8 | Difficulty: Easy | Domain: Self-Service & Automation</div>
+            <div class="options">
+        
+                    <div>
+                        <input type="radio" name="question13" id="q13_The_requested_item_moves_to_the_next_phase_of_fulfilment." value="The requested item moves to the next phase of fulfilment.">
+                        <div class="label-container">
+                            <label for="q13_The_requested_item_moves_to_the_next_phase_of_fulfilment.">The requested item moves to the next phase of fulfilment.</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question13" id="q13_The_requested_item_is_automatically_set_to_Closed_Complete." value="The requested item is automatically set to Closed Complete.">
+                        <div class="label-container">
+                            <label for="q13_The_requested_item_is_automatically_set_to_Closed_Complete.">The requested item is automatically set to Closed Complete.</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question13" id="q13_The_requester_is_notified_that_the_request_is_Complete." value="The requester is notified that the request is Complete.">
+                        <div class="label-container">
+                            <label for="q13_The_requester_is_notified_that_the_request_is_Complete.">The requester is notified that the request is Complete.</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question13" id="q13_The_request_is_automatically_set_to_Closed_Complete." value="The request is automatically set to Closed Complete.">
+                        <div class="label-container">
+                            <label for="q13_The_request_is_automatically_set_to_Closed_Complete.">The request is automatically set to Closed Complete.</label>
+                        </div>
+                    </div>
+                </div></div>
+        <div class="question" data-question="14">
+            <b>Question 14: You can add knowledge article URLs to your sitemap to improve content indexing by public search engines. What do you configure to achieve this for the Knowledge Portal?</b>
+            
+            <div class="metadata">Exam 2 | Question 55 | Difficulty: Medium | Domain: Self-Service & Automation</div>
+            <div class="options">
+        
+                    <div>
+                        <input type="radio" name="question14" id="q14_Contextual_Search_-_Service_Portal" value="Contextual Search - Service Portal">
+                        <div class="label-container">
+                            <label for="q14_Contextual_Search_-_Service_Portal">Contextual Search - Service Portal</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question14" id="q14_Connect_Service_Portal_Widgets" value="Connect Service Portal Widgets">
+                        <div class="label-container">
+                            <label for="q14_Connect_Service_Portal_Widgets">Connect Service Portal Widgets</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question14" id="q14_Service_Portal_Analytics" value="Service Portal Analytics">
+                        <div class="label-container">
+                            <label for="q14_Service_Portal_Analytics">Service Portal Analytics</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question14" id="q14_Next_Experience_UI_for_knowledge_articles" value="Next Experience UI for knowledge articles">
+                        <div class="label-container">
+                            <label for="q14_Next_Experience_UI_for_knowledge_articles">Next Experience UI for knowledge articles</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question14" id="q14_Sitemap_Generator_record" value="Sitemap Generator record">
+                        <div class="label-container">
+                            <label for="q14_Sitemap_Generator_record">Sitemap Generator record</label>
+                        </div>
+                    </div>
+                </div></div>
+        <div class="question" data-question="15">
+            <b>Question 15: What are some possible methods of populating a knowledge base with knowledge articles?</b>
+            <br><i>Select 3 Answers from the below options.</i>
+            <div class="metadata">Exam 2 | Question 39 | Difficulty: Hard | Domain: Self-Service & Automation</div>
+            <div class="options">
+        
+                    <div>
+                        <input type="checkbox" name="question15" id="q15_Importing_Microsoft_Word_files" value="Importing Microsoft Word files">
+                        <div class="label-container">
+                            <label for="q15_Importing_Microsoft_Word_files">Importing Microsoft Word files</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="checkbox" name="question15" id="q15_Integrating_with_a_WebDAV_compliant_source" value="Integrating with a WebDAV compliant source">
+                        <div class="label-container">
+                            <label for="q15_Integrating_with_a_WebDAV_compliant_source">Integrating with a WebDAV compliant source</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="checkbox" name="question15" id="q15_Via_e-mail_to_a_defined_knowledge_e-mail_address" value="Via e-mail to a defined knowledge e-mail address">
+                        <div class="label-container">
+                            <label for="q15_Via_e-mail_to_a_defined_knowledge_e-mail_address">Via e-mail to a defined knowledge e-mail address</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="checkbox" name="question15" id="q15_Creating_articles_directly_in_the_ServiceNow_platform" value="Creating articles directly in the ServiceNow platform">
+                        <div class="label-container">
+                            <label for="q15_Creating_articles_directly_in_the_ServiceNow_platform">Creating articles directly in the ServiceNow platform</label>
+                        </div>
+                    </div>
+                </div></div>
+        <div class="question" data-question="16">
+            <b>Question 16: Which of the following is true about the CMDB Data Manager?</b>
+            <br><i>Select 3 Answers from the below options.</i>
+            <div class="metadata">Exam 4 | Question 29 | Difficulty: Hard | Domain: Database Management</div>
+            <div class="options">
+        
+                    <div>
+                        <input type="checkbox" name="question16" id="q16_It_is_a_wizard-like_tool_that_provides_a_comprehensive_solution_for_managing_CIs." value="It is a wizard-like tool that provides a comprehensive solution for managing CIs.">
+                        <div class="label-container">
+                            <label for="q16_It_is_a_wizard-like_tool_that_provides_a_comprehensive_solution_for_managing_CIs.">It is a wizard-like tool that provides a comprehensive solution for managing CIs.</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="checkbox" name="question16" id="q16_It_can_create_policies_that_govern_CI_life_cycle_stages_such_as_retirement_and_deletion." value="It can create policies that govern CI life cycle stages such as retirement and deletion.">
+                        <div class="label-container">
+                            <label for="q16_It_can_create_policies_that_govern_CI_life_cycle_stages_such_as_retirement_and_deletion.">It can create policies that govern CI life cycle stages such as retirement and deletion.</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="checkbox" name="question16" id="q16_It_is_a_framework_that_supports_multiple_configuration_strategies." value="It is a framework that supports multiple configuration strategies.">
+                        <div class="label-container">
+                            <label for="q16_It_is_a_framework_that_supports_multiple_configuration_strategies.">It is a framework that supports multiple configuration strategies.</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="checkbox" name="question16" id="q16_It_is_a_policy-driven_framework_for_managing_CI_life_cycle_operations." value="It is a policy-driven framework for managing CI life cycle operations.">
+                        <div class="label-container">
+                            <label for="q16_It_is_a_policy-driven_framework_for_managing_CI_life_cycle_operations.">It is a policy-driven framework for managing CI life cycle operations.</label>
+                        </div>
+                    </div>
+                </div></div>
+        <div class="question" data-question="17">
+            <b>Question 17: What do you use to control access to features and capabilities in ServiceNow applications and modules?</b>
+            
+            <div class="metadata">Exam 5 | Question 42 | Difficulty: Easy | Domain: Database Management</div>
+            <div class="options">
+        
+                    <div>
+                        <input type="radio" name="question17" id="q17_Company" value="Company">
+                        <div class="label-container">
+                            <label for="q17_Company">Company</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question17" id="q17_Organisation" value="Organisation">
+                        <div class="label-container">
+                            <label for="q17_Organisation">Organisation</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question17" id="q17_Group" value="Group">
+                        <div class="label-container">
+                            <label for="q17_Group">Group</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question17" id="q17_Department" value="Department">
+                        <div class="label-container">
+                            <label for="q17_Department">Department</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question17" id="q17_Role" value="Role">
+                        <div class="label-container">
+                            <label for="q17_Role">Role</label>
+                        </div>
+                    </div>
+                </div></div>
+        <div class="question" data-question="18">
+            <b>Question 18: Which of the following definitions corresponds to Service Catalogue?</b>
+            
+            <div class="metadata">Exam 5 | Question 46 | Difficulty: Easy | Domain: Self-Service & Automation</div>
+            <div class="options">
+        
+                    <div>
+                        <input type="radio" name="question18" id="q18_It_contains_a_collection_of_orderable_products_and_services." value="It contains a collection of orderable products and services.">
+                        <div class="label-container">
+                            <label for="q18_It_contains_a_collection_of_orderable_products_and_services.">It contains a collection of orderable products and services.</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question18" id="q18_Products_placed_in_the_shopping_cart" value="Products placed in the shopping cart">
+                        <div class="label-container">
+                            <label for="q18_Products_placed_in_the_shopping_cart">Products placed in the shopping cart</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question18" id="q18_A_customised_interface_used_to_build_and_submit_an_order" value="A customised interface used to build and submit an order">
+                        <div class="label-container">
+                            <label for="q18_A_customised_interface_used_to_build_and_submit_an_order">A customised interface used to build and submit an order</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question18" id="q18_A_collection_of_one_or_more_ordered_items" value="A collection of one or more ordered items">
+                        <div class="label-container">
+                            <label for="q18_A_collection_of_one_or_more_ordered_items">A collection of one or more ordered items</label>
+                        </div>
+                    </div>
+                </div></div>
+        <div class="question" data-question="19">
+            <b>Question 19: What functionality can you use to track the time a task has been open to ensure that tasks are completed within an allotted time?</b>
+            
+            <div class="metadata">Exam 1 | Question 22 | Difficulty: Easy | Domain: Configuring Applications for Collaboration</div>
+            <div class="options">
+        
+                    <div>
+                        <input type="radio" name="question19" id="q19_Service_Level_Agreements" value="Service Level Agreements">
+                        <div class="label-container">
+                            <label for="q19_Service_Level_Agreements">Service Level Agreements</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question19" id="q19_Inactivity_monitors" value="Inactivity monitors">
+                        <div class="label-container">
+                            <label for="q19_Inactivity_monitors">Inactivity monitors</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question19" id="q19_Approvals" value="Approvals">
+                        <div class="label-container">
+                            <label for="q19_Approvals">Approvals</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question19" id="q19_Assignment_rules" value="Assignment rules">
+                        <div class="label-container">
+                            <label for="q19_Assignment_rules">Assignment rules</label>
+                        </div>
+                    </div>
+                </div></div>
+        <div class="question" data-question="20">
+            <b>Question 20: Which admin role is required to modify access control rules?</b>
+            
+            <div class="metadata">Exam 1 | Question 29 | Difficulty: Medium | Domain: Database Management</div>
+            <div class="options">
+        
+                    <div>
+                        <input type="radio" name="question20" id="q20_business_rule_admin" value="business_rule_admin">
+                        <div class="label-container">
+                            <label for="q20_business_rule_admin">business_rule_admin</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question20" id="q20_admin" value="admin">
+                        <div class="label-container">
+                            <label for="q20_admin">admin</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question20" id="q20_security_admin" value="security_admin">
+                        <div class="label-container">
+                            <label for="q20_security_admin">security_admin</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question20" id="q20_itil_admin" value="itil_admin">
+                        <div class="label-container">
+                            <label for="q20_itil_admin">itil_admin</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question20" id="q20_u_acl_admin" value="u_acl_admin">
+                        <div class="label-container">
+                            <label for="q20_u_acl_admin">u_acl_admin</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question20" id="q20_metric_admin" value="metric_admin">
+                        <div class="label-container">
+                            <label for="q20_metric_admin">metric_admin</label>
+                        </div>
+                    </div>
+                </div></div>
+        <div class="question" data-question="21">
+            <b>Question 21: Which table does the Change Request [change_request] extend?</b>
+            
+            <div class="metadata">Exam 3 | Question 54 | Difficulty: Easy | Domain: Database Management</div>
+            <div class="options">
+        
+                    <div>
+                        <input type="radio" name="question21" id="q21_Problem_problem" value="Problem problem">
+                        <div class="label-container">
+                            <label for="q21_Problem_problem">Problem problem</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question21" id="q21_Incident_incident" value="Incident incident">
+                        <div class="label-container">
+                            <label for="q21_Incident_incident">Incident incident</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question21" id="q21_Task_task" value="Task task">
+                        <div class="label-container">
+                            <label for="q21_Task_task">Task task</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question21" id="q21_Request_sc_request" value="Request sc_request">
+                        <div class="label-container">
+                            <label for="q21_Request_sc_request">Request sc_request</label>
+                        </div>
+                    </div>
+                </div></div>
+        <div class="question" data-question="22">
+            <b>Question 22: Which of the following business needs can be addressed by Flow Designer?</b>
+            <br><i>Select 3 Answers from the below options.</i>
+            <div class="metadata">Exam 5 | Question 19 | Difficulty: Easy | Domain: Self-Service & Automation</div>
+            <div class="options">
+        
+                    <div>
+                        <input type="checkbox" name="question22" id="q22_To_integrate_with_3rd_party_systems." value="To integrate with 3rd party systems.">
+                        <div class="label-container">
+                            <label for="q22_To_integrate_with_3rd_party_systems.">To integrate with 3rd party systems.</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="checkbox" name="question22" id="q22_To_enhance_processes_using_a_ServiceNow_Instance_that_is_running_Jakarta_or_prior." value="To enhance processes using a ServiceNow Instance that is running Jakarta or prior.">
+                        <div class="label-container">
+                            <label for="q22_To_enhance_processes_using_a_ServiceNow_Instance_that_is_running_Jakarta_or_prior.">To enhance processes using a ServiceNow Instance that is running Jakarta or prior.</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="checkbox" name="question22" id="q22_To_orchestrate_business_processes_across_services_with_little_technical_user_knowledge." value="To orchestrate business processes across services with little technical user knowledge.">
+                        <div class="label-container">
+                            <label for="q22_To_orchestrate_business_processes_across_services_with_little_technical_user_knowledge.">To orchestrate business processes across services with little technical user knowledge.</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="checkbox" name="question22" id="q22_To_redevelop_existing_logic_already_built_using_the_ServiceNow_workflow_editor." value="To redevelop existing logic already built using the ServiceNow workflow editor.">
+                        <div class="label-container">
+                            <label for="q22_To_redevelop_existing_logic_already_built_using_the_ServiceNow_workflow_editor.">To redevelop existing logic already built using the ServiceNow workflow editor.</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="checkbox" name="question22" id="q22_To_reduce_technical_debt,_such_as_reducing_scripting_to_simplify_upgrades_and_deployments." value="To reduce technical debt, such as reducing scripting to simplify upgrades and deployments.">
+                        <div class="label-container">
+                            <label for="q22_To_reduce_technical_debt,_such_as_reducing_scripting_to_simplify_upgrades_and_deployments.">To reduce technical debt, such as reducing scripting to simplify upgrades and deployments.</label>
+                        </div>
+                    </div>
+                </div></div>
+        <div class="question" data-question="23">
+            <b>Question 23: Which field data type adds a report to a form?</b>
+            
+            <div class="metadata">Exam 4 | Question 25 | Difficulty: Easy | Domain: Configuring Applications for Collaboration</div>
+            <div class="options">
+        
+                    <div>
+                        <input type="radio" name="question23" id="q23_PDF" value="PDF">
+                        <div class="label-container">
+                            <label for="q23_PDF">PDF</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question23" id="q23_Pivot" value="Pivot">
+                        <div class="label-container">
+                            <label for="q23_Pivot">Pivot</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question23" id="q23_Percent_Complete" value="Percent Complete">
+                        <div class="label-container">
+                            <label for="q23_Percent_Complete">Percent Complete</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question23" id="q23_Link" value="Link">
+                        <div class="label-container">
+                            <label for="q23_Link">Link</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question23" id="q23_Chart" value="Chart">
+                        <div class="label-container">
+                            <label for="q23_Chart">Chart</label>
+                        </div>
+                    </div>
+                </div></div>
+        <div class="question" data-question="24">
+            <b>Question 24: What allows you to see more information on the same screen real estate when using Visual Task Boards?</b>
+            
+            <div class="metadata">Exam 3 | Question 38 | Difficulty: Easy | Domain: Configuring Applications for Collaboration</div>
+            <div class="options">
+        
+                    <div>
+                        <input type="radio" name="question24" id="q24_Compact_Cards" value="Compact Cards">
+                        <div class="label-container">
+                            <label for="q24_Compact_Cards">Compact Cards</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question24" id="q24_Card_Groups" value="Card Groups">
+                        <div class="label-container">
+                            <label for="q24_Card_Groups">Card Groups</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question24" id="q24_Card_Thumbnails" value="Card Thumbnails">
+                        <div class="label-container">
+                            <label for="q24_Card_Thumbnails">Card Thumbnails</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question24" id="q24_Minimise_Tasks" value="Minimise Tasks">
+                        <div class="label-container">
+                            <label for="q24_Minimise_Tasks">Minimise Tasks</label>
+                        </div>
+                    </div>
+                </div></div>
+        <div class="question" data-question="25">
+            <b>Question 25: What related list can you use to extend and track the different types of groups assigned to a Configuration Item?</b>
+            
+            <div class="metadata">Exam 1 | Question 14 | Difficulty: Easy | Domain: Database Management</div>
+            <div class="options">
+        
+                    <div>
+                        <input type="radio" name="question25" id="q25_Resource_Group" value="Resource Group">
+                        <div class="label-container">
+                            <label for="q25_Resource_Group">Resource Group</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question25" id="q25_Dynamic_CI_Group" value="Dynamic CI Group">
+                        <div class="label-container">
+                            <label for="q25_Dynamic_CI_Group">Dynamic CI Group</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question25" id="q25_CMDB_Alert_Groups" value="CMDB Alert Groups">
+                        <div class="label-container">
+                            <label for="q25_CMDB_Alert_Groups">CMDB Alert Groups</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question25" id="q25_Teams" value="Teams">
+                        <div class="label-container">
+                            <label for="q25_Teams">Teams</label>
+                        </div>
+                    </div>
+                </div></div>
+        <div class="question" data-question="26">
+            <b>Question 26: Which application provides a centralised location for creating, categorising, viewing, and governing information related to the flow of work through ServiceNow?</b>
+            
+            <div class="metadata">Exam 1 | Question 7 | Difficulty: Easy | Domain: Self-Service & Automation</div>
+            <div class="options">
+        
+                    <div>
+                        <input type="radio" name="question26" id="q26_Configuration_Management" value="Configuration Management">
+                        <div class="label-container">
+                            <label for="q26_Configuration_Management">Configuration Management</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question26" id="q26_Knowledge_Management" value="Knowledge Management">
+                        <div class="label-container">
+                            <label for="q26_Knowledge_Management">Knowledge Management</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question26" id="q26_Performance_Analytics" value="Performance Analytics">
+                        <div class="label-container">
+                            <label for="q26_Performance_Analytics">Performance Analytics</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question26" id="q26_Data_Separation" value="Data Separation">
+                        <div class="label-container">
+                            <label for="q26_Data_Separation">Data Separation</label>
+                        </div>
+                    </div>
+                </div></div>
+        <div class="question" data-question="27">
+            <b>Question 27: What Visual Task Board type automatically updates the tasks when the respective cards are edited or change lanes?</b>
+            
+            <div class="metadata">Exam 1 | Question 38 | Difficulty: Easy | Domain: Configuring Applications for Collaboration</div>
+            <div class="options">
+        
+                    <div>
+                        <input type="radio" name="question27" id="q27_List" value="List">
+                        <div class="label-container">
+                            <label for="q27_List">List</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question27" id="q27_Guided" value="Guided">
+                        <div class="label-container">
+                            <label for="q27_Guided">Guided</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question27" id="q27_Flexible" value="Flexible">
+                        <div class="label-container">
+                            <label for="q27_Flexible">Flexible</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question27" id="q27_Freeform" value="Freeform">
+                        <div class="label-container">
+                            <label for="q27_Freeform">Freeform</label>
+                        </div>
+                    </div>
+                </div></div>
+        <div class="question" data-question="28">
+            <b>Question 28: What are the components of the Now Platform Core UI interface?</b>
+            <br><i>Select 3 Answers from the below options.</i>
+            <div class="metadata">Exam 5 | Question 53 | Difficulty: Easy | Domain: Instance Configuration</div>
+            <div class="options">
+        
+                    <div>
+                        <input type="checkbox" name="question28" id="q28_Content_frame" value="Content frame">
+                        <div class="label-container">
+                            <label for="q28_Content_frame">Content frame</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="checkbox" name="question28" id="q28_Workspace" value="Workspace">
+                        <div class="label-container">
+                            <label for="q28_Workspace">Workspace</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="checkbox" name="question28" id="q28_Banner_frame" value="Banner frame">
+                        <div class="label-container">
+                            <label for="q28_Banner_frame">Banner frame</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="checkbox" name="question28" id="q28_Application_navigator" value="Application navigator">
+                        <div class="label-container">
+                            <label for="q28_Application_navigator">Application navigator</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="checkbox" name="question28" id="q28_Sidebar" value="Sidebar">
+                        <div class="label-container">
+                            <label for="q28_Sidebar">Sidebar</label>
+                        </div>
+                    </div>
+                </div></div>
+        <div class="question" data-question="29">
+            <b>Question 29: What type of relationship is recommended between Incident and SLA tables to report on incidents resolved by SLA per incident category?</b>
+            
+            <div class="metadata">Exam 2 | Question 14 | Difficulty: Medium | Domain: Database Management</div>
+            <div class="options">
+        
+                    <div>
+                        <input type="radio" name="question29" id="q29_Many-to-Many" value="Many-to-Many">
+                        <div class="label-container">
+                            <label for="q29_Many-to-Many">Many-to-Many</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question29" id="q29_Database_Views" value="Database Views">
+                        <div class="label-container">
+                            <label for="q29_Database_Views">Database Views</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question29" id="q29_One-to-Many" value="One-to-Many">
+                        <div class="label-container">
+                            <label for="q29_One-to-Many">One-to-Many</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question29" id="q29_Extensions" value="Extensions">
+                        <div class="label-container">
+                            <label for="q29_Extensions">Extensions</label>
+                        </div>
+                    </div>
+                </div></div>
+        <div class="question" data-question="30">
+            <b>Question 30: What do you configure to instruct fields how to behave on a form when a UI policy is triggered?</b>
+            
+            <div class="metadata">Exam 1 | Question 59 | Difficulty: Easy | Domain: Data Migration and Integration</div>
+            <div class="options">
+        
+                    <div>
+                        <input type="radio" name="question30" id="q30_Data_Policy" value="Data Policy">
+                        <div class="label-container">
+                            <label for="q30_Data_Policy">Data Policy</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question30" id="q30_UI_Actions" value="UI Actions">
+                        <div class="label-container">
+                            <label for="q30_UI_Actions">UI Actions</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question30" id="q30_UI_Policy_Action" value="UI Policy Action">
+                        <div class="label-container">
+                            <label for="q30_UI_Policy_Action">UI Policy Action</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question30" id="q30_Client_Script" value="Client Script">
+                        <div class="label-container">
+                            <label for="q30_Client_Script">Client Script</label>
+                        </div>
+                    </div>
+                </div></div>
+        <div class="question" data-question="31">
+            <b>Question 31: Which of the following describes creating a field on a table with Form Designer?</b>
+            
+            <div class="metadata">Exam 5 | Question 59 | Difficulty: Medium | Domain: Configuring Applications for Collaboration</div>
+            <div class="options">
+        
+                    <div>
+                        <input type="radio" name="question31" id="q31_From_the_Fields_tab,_drag_the_field_onto_the_form_and_configure_the_field." value="From the Fields tab, drag the field onto the form and configure the field.">
+                        <div class="label-container">
+                            <label for="q31_From_the_Fields_tab,_drag_the_field_onto_the_form_and_configure_the_field.">From the Fields tab, drag the field onto the form and configure the field.</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question31" id="q31_Click_the_New_Field_button_in_the_form_section_and_configure_the_field." value="Click the New Field button in the form section and configure the field.">
+                        <div class="label-container">
+                            <label for="q31_Click_the_New_Field_button_in_the_form_section_and_configure_the_field.">Click the New Field button in the form section and configure the field.</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question31" id="q31_From_the_Fields_tab,_drag_the_Fields_type_onto_the_form_and_configure_the_field." value="From the Fields tab, drag the Fields type onto the form and configure the field.">
+                        <div class="label-container">
+                            <label for="q31_From_the_Fields_tab,_drag_the_Fields_type_onto_the_form_and_configure_the_field.">From the Fields tab, drag the Fields type onto the form and configure the field.</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question31" id="q31_Double-click_Insert_a_new_row..._in_the_form_to_enter_details_for_the_new_field." value="Double-click Insert a new row... in the form to enter details for the new field.">
+                        <div class="label-container">
+                            <label for="q31_Double-click_Insert_a_new_row..._in_the_form_to_enter_details_for_the_new_field.">Double-click Insert a new row... in the form to enter details for the new field.</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question31" id="q31_From_the_Field_Types_tab,_drag_the_field_type_onto_the_form_and_configure_the_field." value="From the Field Types tab, drag the field type onto the form and configure the field.">
+                        <div class="label-container">
+                            <label for="q31_From_the_Field_Types_tab,_drag_the_field_type_onto_the_form_and_configure_the_field.">From the Field Types tab, drag the field type onto the form and configure the field.</label>
+                        </div>
+                    </div>
+                </div></div>
+        <div class="question" data-question="32">
+            <b>Question 32: What framework in Flow Designer helps you select the next component in your flow from a list of AI-generated recommendations?</b>
+            
+            <div class="metadata">Exam 2 | Question 43 | Difficulty: Medium | Domain: Self-Service & Automation</div>
+            <div class="options">
+        
+                    <div>
+                        <input type="radio" name="question32" id="q32_Flow_Diagramming" value="Flow Diagramming">
+                        <div class="label-container">
+                            <label for="q32_Flow_Diagramming">Flow Diagramming</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question32" id="q32_Now_Assist" value="Now Assist">
+                        <div class="label-container">
+                            <label for="q32_Now_Assist">Now Assist</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question32" id="q32_Generative_AI_Controller" value="Generative AI Controller">
+                        <div class="label-container">
+                            <label for="q32_Generative_AI_Controller">Generative AI Controller</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question32" id="q32_AI_Search" value="AI Search">
+                        <div class="label-container">
+                            <label for="q32_AI_Search">AI Search</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question32" id="q32_Predictive_Intelligence" value="Predictive Intelligence">
+                        <div class="label-container">
+                            <label for="q32_Predictive_Intelligence">Predictive Intelligence</label>
+                        </div>
+                    </div>
+                </div></div>
+        <div class="question" data-question="33">
+            <b>Question 33: Which script runs when a record is displayed, inserted, updated, deleted or when a table is queried?</b>
+            
+            <div class="metadata">Exam 1 | Question 19 | Difficulty: Easy | Domain: Data Migration and Integration</div>
+            <div class="options">
+        
+                    <div>
+                        <input type="radio" name="question33" id="q33_UI_Policy" value="UI Policy">
+                        <div class="label-container">
+                            <label for="q33_UI_Policy">UI Policy</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question33" id="q33_Data_Policy" value="Data Policy">
+                        <div class="label-container">
+                            <label for="q33_Data_Policy">Data Policy</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question33" id="q33_Business_Rule" value="Business Rule">
+                        <div class="label-container">
+                            <label for="q33_Business_Rule">Business Rule</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question33" id="q33_Client_Script" value="Client Script">
+                        <div class="label-container">
+                            <label for="q33_Client_Script">Client Script</label>
+                        </div>
+                    </div>
+                </div></div>
+        <div class="question" data-question="34">
+            <b>Question 34: Which of the following is a true statement about user impersonation?</b>
+            <br><i>Select 2 Answers from the below options.</i>
+            <div class="metadata">Exam 1 | Question 45 | Difficulty: Medium | Domain: Platform Overview and Navigation</div>
+            <div class="options">
+        
+                    <div>
+                        <input type="checkbox" name="question34" id="q34_Administrators_will_have_limited_access_to_certain_features_when_impersonating_some_scoped_app_admins." value="Administrators will have limited access to certain features when impersonating some scoped app admins.">
+                        <div class="label-container">
+                            <label for="q34_Administrators_will_have_limited_access_to_certain_features_when_impersonating_some_scoped_app_admins.">Administrators will have limited access to certain features when impersonating some scoped app admins.</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="checkbox" name="question34" id="q34_When_impersonating_another_user,_the_administrator_does_not_have_the_same_access_as_the_impersonated_user." value="When impersonating another user, the administrator does not have the same access as the impersonated user.">
+                        <div class="label-container">
+                            <label for="q34_When_impersonating_another_user,_the_administrator_does_not_have_the_same_access_as_the_impersonated_user.">When impersonating another user, the administrator does not have the same access as the impersonated user.</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="checkbox" name="question34" id="q34_The_impersonation_option_is_not_available_in_the_ServiceNow_mobile_apps." value="The impersonation option is not available in the ServiceNow mobile apps.">
+                        <div class="label-container">
+                            <label for="q34_The_impersonation_option_is_not_available_in_the_ServiceNow_mobile_apps.">The impersonation option is not available in the ServiceNow mobile apps.</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="checkbox" name="question34" id="q34_Administrators_can_impersonate_other_authenticated_users_but_cannot_view_impersonation_logs." value="Administrators can impersonate other authenticated users but cannot view impersonation logs.">
+                        <div class="label-container">
+                            <label for="q34_Administrators_can_impersonate_other_authenticated_users_but_cannot_view_impersonation_logs.">Administrators can impersonate other authenticated users but cannot view impersonation logs.</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="checkbox" name="question34" id="q34_Non-admin_users_with_the_impersonator_role_will_have_limited_access_if_they_impersonate_admin_users." value="Non-admin users with the impersonator role will have limited access if they impersonate admin users.">
+                        <div class="label-container">
+                            <label for="q34_Non-admin_users_with_the_impersonator_role_will_have_limited_access_if_they_impersonate_admin_users.">Non-admin users with the impersonator role will have limited access if they impersonate admin users.</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="checkbox" name="question34" id="q34_Users_will_need_to_log_out_after_each_impersonation_to_end_it." value="Users will need to log out after each impersonation to end it.">
+                        <div class="label-container">
+                            <label for="q34_Users_will_need_to_log_out_after_each_impersonation_to_end_it.">Users will need to log out after each impersonation to end it.</label>
+                        </div>
+                    </div>
+                </div></div>
+        <div class="question" data-question="35">
+            <b>Question 35: You can use machine-learning solutions in your ServiceNow instance to predict, recommend, and organise data outcomes. These solutions can help resolve requests faster by categorising, assigning and prioritising them using the Short Description.
+What is the name of this platform function?</b>
+            
+            <div class="metadata">Exam 2 | Question 23 | Difficulty: Medium | Domain: Platform Overview and Navigation</div>
+            <div class="options">
+        
+                    <div>
+                        <input type="radio" name="question35" id="q35_Agent_Assist" value="Agent Assist">
+                        <div class="label-container">
+                            <label for="q35_Agent_Assist">Agent Assist</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question35" id="q35_Predictive_Intelligence" value="Predictive Intelligence">
+                        <div class="label-container">
+                            <label for="q35_Predictive_Intelligence">Predictive Intelligence</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question35" id="q35_Performance_Analytics" value="Performance Analytics">
+                        <div class="label-container">
+                            <label for="q35_Performance_Analytics">Performance Analytics</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question35" id="q35_User_Experience_Analytics" value="User Experience Analytics">
+                        <div class="label-container">
+                            <label for="q35_User_Experience_Analytics">User Experience Analytics</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question35" id="q35_Virtual_Agent" value="Virtual Agent">
+                        <div class="label-container">
+                            <label for="q35_Virtual_Agent">Virtual Agent</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question35" id="q35_Natural_Language_Understanding" value="Natural Language Understanding">
+                        <div class="label-container">
+                            <label for="q35_Natural_Language_Understanding">Natural Language Understanding</label>
+                        </div>
+                    </div>
+                </div></div>
+        <div class="question" data-question="36">
+            <b>Question 36: What type of service catalogue item is used to create an incident or raise an HR case?</b>
+            
+            <div class="metadata">Exam 1 | Question 37 | Difficulty: Easy | Domain: Self-Service & Automation</div>
+            <div class="options">
+        
+                    <div>
+                        <input type="radio" name="question36" id="q36_Order_an_item" value="Order an item">
+                        <div class="label-container">
+                            <label for="q36_Order_an_item">Order an item</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question36" id="q36_Request_a_service" value="Request a service">
+                        <div class="label-container">
+                            <label for="q36_Request_a_service">Request a service</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question36" id="q36_Maintain_a_service" value="Maintain a service">
+                        <div class="label-container">
+                            <label for="q36_Maintain_a_service">Maintain a service</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question36" id="q36_Record_producer" value="Record producer">
+                        <div class="label-container">
+                            <label for="q36_Record_producer">Record producer</label>
+                        </div>
+                    </div>
+                </div></div>
+        <div class="question" data-question="37">
+            <b>Question 37: What are the different types of Client Scripts that are supported in ServiceNow?</b>
+            <br><i>Select 4 Answers from the below options.</i>
+            <div class="metadata">Exam 1 | Question 46 | Difficulty: Hard | Domain: Data Migration and Integration</div>
+            <div class="options">
+        
+                    <div>
+                        <input type="checkbox" name="question37" id="q37_OnSubmit()" value="OnSubmit()">
+                        <div class="label-container">
+                            <label for="q37_OnSubmit()">OnSubmit()</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="checkbox" name="question37" id="q37_OnDelete()" value="OnDelete()">
+                        <div class="label-container">
+                            <label for="q37_OnDelete()">OnDelete()</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="checkbox" name="question37" id="q37_OnLoad()" value="OnLoad()">
+                        <div class="label-container">
+                            <label for="q37_OnLoad()">OnLoad()</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="checkbox" name="question37" id="q37_OnCellEdit()" value="OnCellEdit()">
+                        <div class="label-container">
+                            <label for="q37_OnCellEdit()">OnCellEdit()</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="checkbox" name="question37" id="q37_OnSave()" value="OnSave()">
+                        <div class="label-container">
+                            <label for="q37_OnSave()">OnSave()</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="checkbox" name="question37" id="q37_OnChange()" value="OnChange()">
+                        <div class="label-container">
+                            <label for="q37_OnChange()">OnChange()</label>
+                        </div>
+                    </div>
+                </div></div>
+        <div class="question" data-question="38">
+            <b>Question 38: Which of the following defines an application service in the best way?</b>
+            
+            <div class="metadata">Exam 3 | Question 32 | Difficulty: Medium | Domain: Database Management</div>
+            <div class="options">
+        
+                    <div>
+                        <input type="radio" name="question38" id="q38_An_application_service_monitors_services_in_an_organisation." value="An application service monitors services in an organisation.">
+                        <div class="label-container">
+                            <label for="q38_An_application_service_monitors_services_in_an_organisation.">An application service monitors services in an organisation.</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question38" id="q38_It_is_a_set_of_interconnected_applications_and_hosts_configured_to_offer_a_service_to_an_organisation." value="It is a set of interconnected applications and hosts configured to offer a service to an organisation.">
+                        <div class="label-container">
+                            <label for="q38_It_is_a_set_of_interconnected_applications_and_hosts_configured_to_offer_a_service_to_an_organisation.">It is a set of interconnected applications and hosts configured to offer a service to an organisation.</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question38" id="q38_It_supports_multiple_configuration_strategies." value="It supports multiple configuration strategies.">
+                        <div class="label-container">
+                            <label for="q38_It_supports_multiple_configuration_strategies.">It supports multiple configuration strategies.</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question38" id="q38_It_provides_standard_fields_and_values_for_tracking_life-cycle_stages." value="It provides standard fields and values for tracking life-cycle stages.">
+                        <div class="label-container">
+                            <label for="q38_It_provides_standard_fields_and_values_for_tracking_life-cycle_stages.">It provides standard fields and values for tracking life-cycle stages.</label>
+                        </div>
+                    </div>
+                </div></div>
+        <div class="question" data-question="39">
+            <b>Question 39: At what levels can User Criteria be used in Knowledge Management to control who can read and contribute?</b>
+            <br><i>Select 3 Answers from the below options.</i>
+            <div class="metadata">Exam 5 | Question 16 | Difficulty: Medium | Domain: Self-Service & Automation</div>
+            <div class="options">
+        
+                    <div>
+                        <input type="checkbox" name="question39" id="q39_Knowledge_Category" value="Knowledge Category">
+                        <div class="label-container">
+                            <label for="q39_Knowledge_Category">Knowledge Category</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="checkbox" name="question39" id="q39_Knowledge_Article" value="Knowledge Article">
+                        <div class="label-container">
+                            <label for="q39_Knowledge_Article">Knowledge Article</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="checkbox" name="question39" id="q39_Knowledge_Block" value="Knowledge Block">
+                        <div class="label-container">
+                            <label for="q39_Knowledge_Block">Knowledge Block</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="checkbox" name="question39" id="q39_Knowledge_Base" value="Knowledge Base">
+                        <div class="label-container">
+                            <label for="q39_Knowledge_Base">Knowledge Base</label>
+                        </div>
+                    </div>
+                </div></div>
+        <div class="question" data-question="40">
+            <b>Question 40: Who can add or remove widgets in a dashboard?</b>
+            <br><i>Select 3 Answers from the below options.</i>
+            <div class="metadata">Exam 1 | Question 30 | Difficulty: Hard | Domain: Configuring Applications for Collaboration</div>
+            <div class="options">
+        
+                    <div>
+                        <input type="checkbox" name="question40" id="q40_Users_with_dashboard_admin_role" value="Users with dashboard_admin role">
+                        <div class="label-container">
+                            <label for="q40_Users_with_dashboard_admin_role">Users with dashboard_admin role</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="checkbox" name="question40" id="q40_Users_with_report_admin_role" value="Users with report_admin role">
+                        <div class="label-container">
+                            <label for="q40_Users_with_report_admin_role">Users with report_admin role</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="checkbox" name="question40" id="q40_Users_with_view_access_to_the_dashboard" value="Users with view access to the dashboard">
+                        <div class="label-container">
+                            <label for="q40_Users_with_view_access_to_the_dashboard">Users with view access to the dashboard</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="checkbox" name="question40" id="q40_Dashboard_owner" value="Dashboard owner">
+                        <div class="label-container">
+                            <label for="q40_Dashboard_owner">Dashboard owner</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="checkbox" name="question40" id="q40_Users_with_edit_access_to_the_dashboard" value="Users with edit access to the dashboard">
+                        <div class="label-container">
+                            <label for="q40_Users_with_edit_access_to_the_dashboard">Users with edit access to the dashboard</label>
+                        </div>
+                    </div>
+                </div></div>
+        <button onclick="checkAnswers('test1')">Check Answers</button>
+    </div>
+</body>
+</html>
+    

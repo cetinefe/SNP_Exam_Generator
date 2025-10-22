@@ -4,6 +4,8 @@ import json
 import os
 import argparse
 import html
+from datetime import datetime
+
 
 def check_requirements():
     """Check if required packages are installed."""
@@ -14,14 +16,16 @@ def check_requirements():
         print("pip install pandas")
         sys.exit(1)
 
+
 # Run package check before imports
 check_requirements()
+
 
 def validate_csv_structure(sheet_data):
     """Ensure required columns exist in the DataFrame."""
     required_columns = [
-        "Occurrence", "Exam Number", "Correct Answers & Selections", 
-        "Question Text", "Selections", "Selection Criteria", 
+        "Occurrence", "Exam Number", "Correct Answers & Selections",
+        "Question Text", "Selections", "Selection Criteria",
         "Exam #", "Question #", "Difficulty Level", "Domain"
     ]
     missing_columns = [col for col in required_columns if col not in sheet_data.columns]
@@ -29,62 +33,73 @@ def validate_csv_structure(sheet_data):
         raise ValueError(f"Missing required columns: {', '.join(missing_columns)}")
     return sheet_data
 
+
 def generate_exam_html(csv_file_path, output_dir, sample_size=40):
+    """Main logic to read CSV, sample questions, and generate HTML exam."""
     try:
-        # Create output directory if it doesn't exist
         os.makedirs(output_dir, exist_ok=True)
-        
+
         if not os.path.exists(csv_file_path):
             raise FileNotFoundError(f"CSV file not found: {csv_file_path}")
-        
-        # Read CSV file
+
+        # Read CSV
         sheet_data = pd.read_csv(csv_file_path)
         sheet_data = validate_csv_structure(sheet_data)
-        
-        # Fix the exam number calculation
+
+        # Determine next exam number
         max_exam_number = 0
         if 'Exam Number' in sheet_data.columns:
-            # Convert to numeric, treating non-numeric values as NaN
             sheet_data['Exam Number'] = pd.to_numeric(sheet_data['Exam Number'], errors='coerce')
-            # Get the maximum value, ignoring NaN
             valid_exam_numbers = sheet_data['Exam Number'].dropna()
             if not valid_exam_numbers.empty:
                 max_exam_number = int(valid_exam_numbers.max())
 
         new_exam_number = max_exam_number + 1
 
+        # Adjust sample size
         if len(sheet_data) < sample_size:
-            sample_size = len(sheet_data)  # Use all available questions
+            sample_size = len(sheet_data)
+
+        # Random sample of questions
         questions = sheet_data.sample(sample_size)
-        
-        # Update with new exam number
+
+        # Update exam number and occurrence
         sheet_data.loc[questions.index, "Occurrence"] = sheet_data.loc[questions.index, "Occurrence"].fillna(0) + 1
         sheet_data.loc[questions.index, "Exam Number"] = new_exam_number
 
-        # Save changes back to CSV
+        # Save updated data
         sheet_data.to_csv(csv_file_path, index=False)
-        
-        output_html_path = os.path.join(output_dir, f"shuffle_exam_test_{new_exam_number}.html")
-        html_content = create_html_content(questions, new_exam_number)
+
+        # Timestamp for filename
+        timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        output_html_path = os.path.join(
+            output_dir,
+            f"shuffle_exam_test_{new_exam_number}_{timestamp}.html"
+        )
+
+        # Generate HTML content
+        html_content = create_html_content(questions, new_exam_number, timestamp)
 
         with open(output_html_path, 'w', encoding='utf-8') as file:
             file.write(html_content)
 
-        print(f"HTML file successfully written to {output_html_path}")
+        print(f"✅ HTML file successfully written to:\n{output_html_path}")
+
     except Exception as e:
         log_error(e)
         raise
 
-def create_html_content(questions, new_exam_number):
+
+def create_html_content(questions, new_exam_number, timestamp):
     """Create HTML content for the exam."""
-    # Create the correct answers dictionary FIRST
     correct_answers_dict = {}
     for i, (_, row) in enumerate(questions.iterrows(), start=1):
         if pd.notna(row['Correct Answers & Selections']):
             answers = [ans.strip() for ans in str(row['Correct Answers & Selections']).split('+')]
             correct_answers_dict[str(i)] = answers
 
-    html_header = f"""
+    # Use raw f-string to preserve regex and backslashes
+    html_header = fr"""
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -114,35 +129,27 @@ def create_html_content(questions, new_exam_number):
             for (let i = 1; i <= totalQuestions; i++) {{
                 const key = i.toString();
                 const questionDiv = document.querySelector(`#${{testId}} div[data-question="${{key}}"]`);
-                
                 if (!questionDiv) continue;
-                
+
                 const selectedOptions = Array.from(
                     questionDiv.querySelectorAll('input:checked')
                 ).map(opt => opt.value.trim());
-                
-                // Remove any existing status classes
+
                 questionDiv.classList.remove('correct', 'incorrect', 'missing');
-                
-                // Reset previous markings
                 questionDiv.querySelectorAll('.label-container').forEach(label => {{
                     label.classList.remove('correct-answer');
                 }});
-                
-                // Skip questions with no correct answers defined
+
                 if (!correctAnswers[key]) continue;
-                
+
                 const correct = correctAnswers[key].map(ans => ans.trim());
-                
+
                 if (selectedOptions.length === 0) {{
-                    // No answer selected
                     questionDiv.classList.add('missing');
                 }} else {{
-                    // Sort both arrays for comparison
                     const sortedSelected = selectedOptions.sort();
                     const sortedCorrect = correct.sort();
                     const isEqual = JSON.stringify(sortedSelected) === JSON.stringify(sortedCorrect);
-                    
                     if (isEqual) {{
                         score++;
                         questionDiv.classList.add('correct');
@@ -150,25 +157,25 @@ def create_html_content(questions, new_exam_number):
                         questionDiv.classList.add('incorrect');
                     }}
                 }}
-                
+
                 // Highlight correct answers
                 correct.forEach(correctAns => {{
-                    // Escape special characters in the correct answer
-                    const escapedCorrectAns = correctAns.replace(/([!"#$%&'()*+,.\\/:;<=>?@[\\]]^`{{|}}~])/g, '\\$1');
+                    const escapedCorrectAns = correctAns.replace(/([!"#$%&'()*+,.\\/:;<=>?@[\\\]^`{{|}}~])/g, '\\$1');
                     const correctLabel = questionDiv.querySelector(`label[for="q${{key}}_${{escapedCorrectAns.replace(/\\s/g, '_')}}"]`);
                     if (correctLabel) {{
                         correctLabel.parentElement.classList.add('correct-answer');
                     }}
                 }});
             }}
-            
-            document.querySelector(`#${{testId}} .score`).textContent = 
+
+            document.querySelector(`#${{testId}} .score`).textContent =
                 `Your score is: ${{score}} out of ${{Object.keys(correctAnswers).length}}`;
         }}
     </script>
 </head>
 <body>
     <h1>Random Scoped Exam Test {new_exam_number}</h1>
+    <p style="text-align:center; font-size: 0.9em; color: gray;">Generated on {timestamp}</p>
     <div id="test1" class="test-container">
         <div class="score">Your score is: 0 out of {len(questions)}</div>
 """
@@ -208,14 +215,16 @@ def create_html_content(questions, new_exam_number):
 </body>
 </html>
     """
-    
+
     return html_header + question_html + html_footer
+
 
 def log_error(e):
     """Log errors to a file."""
     with open("error_log.txt", "a") as log_file:
-        log_file.write(f"Error: {e}\n")
-    print(f"An error occurred: {e}")
+        log_file.write(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] Error: {e}\n")
+    print(f"⚠️ An error occurred: {e}")
+
 
 def main():
     parser = argparse.ArgumentParser(description='Generate exam HTML from CSV file')
@@ -228,6 +237,7 @@ def main():
     except Exception as e:
         log_error(e)
         sys.exit(1)
+
 
 if __name__ == "__main__":
     main()
