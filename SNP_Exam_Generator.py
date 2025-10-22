@@ -4,6 +4,7 @@ import json
 import os
 import argparse
 import html
+import random
 from datetime import datetime
 
 
@@ -61,7 +62,7 @@ def generate_exam_html(csv_file_path, output_dir, sample_size=40):
             sample_size = len(sheet_data)
 
         # Random sample of questions
-        questions = sheet_data.sample(sample_size)
+        questions = sheet_data.sample(sample_size).copy()
 
         # Update exam number and occurrence
         sheet_data.loc[questions.index, "Occurrence"] = sheet_data.loc[questions.index, "Occurrence"].fillna(0) + 1
@@ -93,10 +94,21 @@ def generate_exam_html(csv_file_path, output_dir, sample_size=40):
 def create_html_content(questions, new_exam_number, timestamp):
     """Create HTML content for the exam."""
     correct_answers_dict = {}
+    question_option_map = {}
+
     for i, (_, row) in enumerate(questions.iterrows(), start=1):
+        # Correct answers
         if pd.notna(row['Correct Answers & Selections']):
             answers = [ans.strip() for ans in str(row['Correct Answers & Selections']).split('+')]
             correct_answers_dict[str(i)] = answers
+
+        # Shuffle the Selections
+        if pd.notna(row['Selections']):
+            options = [opt.strip() for opt in str(row['Selections']).split('+')]
+            random.shuffle(options)
+            question_option_map[str(i)] = options
+        else:
+            question_option_map[str(i)] = []
 
     # Use raw f-string to preserve regex and backslashes
     html_header = fr"""
@@ -192,9 +204,8 @@ def create_html_content(questions, new_exam_number, timestamp):
             <div class="metadata">{metadata}</div>
             <div class="options">
         """
-        if pd.notna(row['Selections']):
-            for option in row['Selections'].split('+'):
-                option = option.strip()
+        if question_option_map[str(i)]:
+            for option in question_option_map[str(i)]:
                 escaped_option = html.escape(option)
                 option_id = f"q{i}_{escaped_option.replace(' ', '_')}"
                 question_html += f'''
