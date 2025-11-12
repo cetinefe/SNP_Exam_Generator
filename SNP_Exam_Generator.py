@@ -9,38 +9,37 @@ def check_requirements():
     """Check if required packages are installed."""
     try:
         import pandas
-        import openpyxl  # Required for Excel support
     except ImportError:
         print("Required packages are missing. Please install them:")
-        print("pip install pandas openpyxl")
+        print("pip install pandas")
         sys.exit(1)
 
 # Run package check before imports
 check_requirements()
 
-def validate_excel_structure(sheet_data):
+def validate_csv_structure(sheet_data):
     """Ensure required columns exist in the DataFrame."""
     required_columns = [
         "Occurrence", "Exam Number", "Correct Answers & Selections", 
         "Question Text", "Selections", "Selection Criteria", 
         "Exam #", "Question #", "Difficulty Level", "Domain"
     ]
-    for column in required_columns:
-        if column not in sheet_data.columns:
-            sheet_data[column] = None if column != "Occurrence" else 0
+    missing_columns = [col for col in required_columns if col not in sheet_data.columns]
+    if missing_columns:
+        raise ValueError(f"Missing required columns: {', '.join(missing_columns)}")
     return sheet_data
 
-def generate_exam_html(excel_file_path, output_dir, sample_size=40):
+def generate_exam_html(csv_file_path, output_dir, sample_size=40):
     try:
         # Create output directory if it doesn't exist
         os.makedirs(output_dir, exist_ok=True)
         
-        if not os.path.exists(excel_file_path):
-            raise FileNotFoundError(f"Excel file not found: {excel_file_path}")
+        if not os.path.exists(csv_file_path):
+            raise FileNotFoundError(f"CSV file not found: {csv_file_path}")
         
-        data = pd.ExcelFile(excel_file_path)
-        sheet_data = data.parse('Sheet1')  # Adjust sheet name if necessary
-        sheet_data = validate_excel_structure(sheet_data)
+        # Read CSV file
+        sheet_data = pd.read_csv(csv_file_path)
+        sheet_data = validate_csv_structure(sheet_data)
         
         # Fix the exam number calculation
         max_exam_number = 0
@@ -62,8 +61,8 @@ def generate_exam_html(excel_file_path, output_dir, sample_size=40):
         sheet_data.loc[questions.index, "Occurrence"] = sheet_data.loc[questions.index, "Occurrence"].fillna(0) + 1
         sheet_data.loc[questions.index, "Exam Number"] = new_exam_number
 
-        # Save changes back to Excel
-        sheet_data.to_excel(excel_file_path, index=False)
+        # Save changes back to CSV
+        sheet_data.to_csv(csv_file_path, index=False)
         
         output_html_path = os.path.join(output_dir, f"shuffle_exam_test_{new_exam_number}.html")
         html_content = create_html_content(questions, new_exam_number)
@@ -154,7 +153,9 @@ def create_html_content(questions, new_exam_number):
                 
                 // Highlight correct answers
                 correct.forEach(correctAns => {{
-                    const correctLabel = questionDiv.querySelector(`label[for="q${{key}}_${{correctAns.replace(/\\s/g, '_')}}"]`);
+                    // Escape special characters in the correct answer
+                    const escapedCorrectAns = correctAns.replace(/([!"#$%&'()*+,.\\//:;<=>?@[\\\]^`{{|}}~])/g, '\\$1');
+                    const correctLabel = questionDiv.querySelector(`label[for="q${{key}}_${{escapedCorrectAns.replace(/\\s/g, '_')}}"]`);
                     if (correctLabel) {{
                         correctLabel.parentElement.classList.add('correct-answer');
                     }}
@@ -217,14 +218,15 @@ def log_error(e):
     print(f"An error occurred: {e}")
 
 def main():
-    parser = argparse.ArgumentParser(description='Generate exam HTML from Excel file')
-    parser.add_argument('--excel', '-e', required=True, help='Path to Excel file')
+    parser = argparse.ArgumentParser(description='Generate exam HTML from CSV file')
+    parser.add_argument('--csv', '-c', required=True, help='Path to CSV file')
     parser.add_argument('--output', '-o', default='output', help='Output directory for HTML files')
     parser.add_argument('--sample-size', '-n', type=int, default=40, help='Number of questions to sample')
     args = parser.parse_args()
     try:
-        generate_exam_html(args.excel, args.output, args.sample_size)
+        generate_exam_html(args.csv, args.output, args.sample_size)
     except Exception as e:
+        log_error(e)
         sys.exit(1)
 
 if __name__ == "__main__":
