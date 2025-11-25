@@ -1,0 +1,282 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Scoped Exam Test 9</title>
+    <style>
+        body {font-family: Arial, sans-serif;}
+        h1 {text-align: center;}
+        .test-container {margin-bottom: 50px; border: 1px solid #ccc; padding: 20px; border-radius: 8px;}
+        .question {margin-bottom: 20px; padding: 10px;}
+        .options {margin-left: 20px;}
+        .metadata {font-size: 0.9em; color: grey; margin-top: 5px;}
+        .correct {background-color: #dff0d8;}
+        .incorrect {background-color: #f2dede;}
+        .missing {background-color: #d9edf7;}
+        .correct-answer {color: green; font-weight: bold;}
+        .label-container {display: inline-block; margin-left: 5px;}
+    </style>
+    <script>
+        const correctAnswers = {
+    "1": [
+        "Creator Studio"
+    ],
+    "2": [
+        "Transform map"
+    ],
+    "3": [
+        "Record-based"
+    ],
+    "4": [
+        "Catalog Item",
+        "Categories",
+        "Catalogs"
+    ],
+    "5": [
+        "Help Center"
+    ]
+};
+        
+        function checkAnswers(testId) {
+            let score = 0;
+            const totalQuestions = document.querySelectorAll(`#${testId} .question`).length;
+            
+            for (let i = 1; i <= totalQuestions; i++) {
+                const key = i.toString();
+                const questionDiv = document.querySelector(`#${testId} div[data-question="${key}"]`);
+                if (!questionDiv) continue;
+
+                const selectedOptions = Array.from(
+                    questionDiv.querySelectorAll('input:checked')
+                ).map(opt => opt.value.trim());
+
+                questionDiv.classList.remove('correct', 'incorrect', 'missing');
+                questionDiv.querySelectorAll('.label-container').forEach(label => {
+                    label.classList.remove('correct-answer');
+                });
+
+                if (!correctAnswers[key]) continue;
+
+                const correct = correctAnswers[key].map(ans => ans.trim());
+
+                if (selectedOptions.length === 0) {
+                    questionDiv.classList.add('missing');
+                } else {
+                    const sortedSelected = selectedOptions.sort();
+                    const sortedCorrect = correct.sort();
+                    const isEqual = JSON.stringify(sortedSelected) === JSON.stringify(sortedCorrect);
+                    if (isEqual) {
+                        score++;
+                        questionDiv.classList.add('correct');
+                    } else {
+                        questionDiv.classList.add('incorrect');
+                    }
+                }
+
+                // Highlight correct answers
+                correct.forEach(correctAns => {
+                    const escapedCorrectAns = correctAns.replace(/([!"#$%&'()*+,.\\/:;<=>?@[\\\]^`{|}~])/g, '\\$1');
+                    const correctLabel = questionDiv.querySelector(`label[for="q${key}_${escapedCorrectAns.replace(/\\s/g, '_')}"]`);
+                    if (correctLabel) {
+                        correctLabel.parentElement.classList.add('correct-answer');
+                    }
+                });
+            }
+
+            document.querySelector(`#${testId} .score`).textContent =
+                `Your score is: ${score} out of ${Object.keys(correctAnswers).length}`;
+        }
+    </script>
+</head>
+<body>
+    <h1>Random Scoped Exam Test 9</h1>
+    <p style="text-align:center; font-size: 0.9em; color: gray;">
+        Generated on 2025-10-22_15-54-44 (Seed: 99)
+    </p>
+    <div id="test1" class="test-container">
+        <div class="score">Your score is: 0 out of 5</div>
+
+        <div class="question" data-question="1">
+            <b>Question 1: (Washington DC) What ServiceNow product allows you to create request-fulfilment applications without writing code?</b>
+            
+            <div class="metadata">Exam 5 | Question 50 | Difficulty: Easy | Domain: Data Migration and Integration</div>
+            <div class="options">
+        
+                    <div>
+                        <input type="radio" name="question1" id="q1_Guided_Application_Creator" value="Guided Application Creator">
+                        <div class="label-container">
+                            <label for="q1_Guided_Application_Creator">Guided Application Creator</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question1" id="q1_ServiceNow_Studio" value="ServiceNow Studio">
+                        <div class="label-container">
+                            <label for="q1_ServiceNow_Studio">ServiceNow Studio</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question1" id="q1_App_Engine_Studio" value="App Engine Studio">
+                        <div class="label-container">
+                            <label for="q1_App_Engine_Studio">App Engine Studio</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question1" id="q1_Creator_Studio" value="Creator Studio">
+                        <div class="label-container">
+                            <label for="q1_Creator_Studio">Creator Studio</label>
+                        </div>
+                    </div>
+                </div></div>
+        <div class="question" data-question="2">
+            <b>Question 2: Which tool do you use to determine the relationship between fields in an import set and an existing table?</b>
+            
+            <div class="metadata">Exam 1 | Question 50 | Difficulty: Medium | Domain: Database Management</div>
+            <div class="options">
+        
+                    <div>
+                        <input type="radio" name="question2" id="q2_Coalesce" value="Coalesce">
+                        <div class="label-container">
+                            <label for="q2_Coalesce">Coalesce</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question2" id="q2_Import_Set" value="Import Set">
+                        <div class="label-container">
+                            <label for="q2_Import_Set">Import Set</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question2" id="q2_Target_Table" value="Target Table">
+                        <div class="label-container">
+                            <label for="q2_Target_Table">Target Table</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question2" id="q2_Transform_map" value="Transform map">
+                        <div class="label-container">
+                            <label for="q2_Transform_map">Transform map</label>
+                        </div>
+                    </div>
+                </div></div>
+        <div class="question" data-question="3">
+            <b>Question 3: What type of Flow Designer Trigger is required to look up a record, update a field value and request approval?</b>
+            
+            <div class="metadata">Exam 3 | Question 43 | Difficulty: Medium | Domain: Self-Service & Automation</div>
+            <div class="options">
+        
+                    <div>
+                        <input type="radio" name="question3" id="q3_Record-based" value="Record-based">
+                        <div class="label-container">
+                            <label for="q3_Record-based">Record-based</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question3" id="q3_Schedule-based" value="Schedule-based">
+                        <div class="label-container">
+                            <label for="q3_Schedule-based">Schedule-based</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question3" id="q3_Role-based" value="Role-based">
+                        <div class="label-container">
+                            <label for="q3_Role-based">Role-based</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question3" id="q3_Application-based" value="Application-based">
+                        <div class="label-container">
+                            <label for="q3_Application-based">Application-based</label>
+                        </div>
+                    </div>
+                </div></div>
+        <div class="question" data-question="4">
+            <b>Question 4: What aspects of the Service Catalog application can a Catalog Administrator manage?</b>
+            <br><i>Select 3 Answers from the below options.</i>
+            <div class="metadata">Exam 3 | Question 9 | Difficulty: Medium | Domain: Self-Service & Automation</div>
+            <div class="options">
+        
+                    <div>
+                        <input type="checkbox" name="question4" id="q4_Catalogs" value="Catalogs">
+                        <div class="label-container">
+                            <label for="q4_Catalogs">Catalogs</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="checkbox" name="question4" id="q4_Catalog_Item" value="Catalog Item">
+                        <div class="label-container">
+                            <label for="q4_Catalog_Item">Catalog Item</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="checkbox" name="question4" id="q4_Scripting_functions" value="Scripting functions">
+                        <div class="label-container">
+                            <label for="q4_Scripting_functions">Scripting functions</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="checkbox" name="question4" id="q4_Business_Rules" value="Business Rules">
+                        <div class="label-container">
+                            <label for="q4_Business_Rules">Business Rules</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="checkbox" name="question4" id="q4_Categories" value="Categories">
+                        <div class="label-container">
+                            <label for="q4_Categories">Categories</label>
+                        </div>
+                    </div>
+                </div></div>
+        <div class="question" data-question="5">
+            <b>Question 5: (Washington DC) Where can you find information about the new and important features for applications in your instance, including features from the latest ServiceNow release(s)?</b>
+            
+            <div class="metadata">Exam 3 | Question 5 | Difficulty: Easy | Domain: Platform Overview and Navigation</div>
+            <div class="options">
+        
+                    <div>
+                        <input type="radio" name="question5" id="q5_Resource_Center" value="Resource Center">
+                        <div class="label-container">
+                            <label for="q5_Resource_Center">Resource Center</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question5" id="q5_Help_Center" value="Help Center">
+                        <div class="label-container">
+                            <label for="q5_Help_Center">Help Center</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question5" id="q5_Release_Center" value="Release Center">
+                        <div class="label-container">
+                            <label for="q5_Release_Center">Release Center</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question5" id="q5_Customer_Success_Center" value="Customer Success Center">
+                        <div class="label-container">
+                            <label for="q5_Customer_Success_Center">Customer Success Center</label>
+                        </div>
+                    </div>
+                </div></div>
+        <button onclick="checkAnswers('test1')">Check Answers</button>
+    </div>
+</body>
+</html>
+    

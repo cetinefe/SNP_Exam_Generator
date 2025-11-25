@@ -1,0 +1,282 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Scoped Exam Test 8</title>
+    <style>
+        body {font-family: Arial, sans-serif;}
+        h1 {text-align: center;}
+        .test-container {margin-bottom: 50px; border: 1px solid #ccc; padding: 20px; border-radius: 8px;}
+        .question {margin-bottom: 20px; padding: 10px;}
+        .options {margin-left: 20px;}
+        .metadata {font-size: 0.9em; color: grey; margin-top: 5px;}
+        .correct {background-color: #dff0d8;}
+        .incorrect {background-color: #f2dede;}
+        .missing {background-color: #d9edf7;}
+        .correct-answer {color: green; font-weight: bold;}
+        .label-container {display: inline-block; margin-left: 5px;}
+    </style>
+    <script>
+        const correctAnswers = {
+    "1": [
+        "Flow",
+        "Workflow",
+        "Execution Plan"
+    ],
+    "2": [
+        "Knowledge Management"
+    ],
+    "3": [
+        "Select variables"
+    ],
+    "4": [
+        "Save"
+    ],
+    "5": [
+        "Integration Hub"
+    ]
+};
+        
+        function checkAnswers(testId) {
+            let score = 0;
+            const totalQuestions = document.querySelectorAll(`#${testId} .question`).length;
+            
+            for (let i = 1; i <= totalQuestions; i++) {
+                const key = i.toString();
+                const questionDiv = document.querySelector(`#${testId} div[data-question="${key}"]`);
+                if (!questionDiv) continue;
+
+                const selectedOptions = Array.from(
+                    questionDiv.querySelectorAll('input:checked')
+                ).map(opt => opt.value.trim());
+
+                questionDiv.classList.remove('correct', 'incorrect', 'missing');
+                questionDiv.querySelectorAll('.label-container').forEach(label => {
+                    label.classList.remove('correct-answer');
+                });
+
+                if (!correctAnswers[key]) continue;
+
+                const correct = correctAnswers[key].map(ans => ans.trim());
+
+                if (selectedOptions.length === 0) {
+                    questionDiv.classList.add('missing');
+                } else {
+                    const sortedSelected = selectedOptions.sort();
+                    const sortedCorrect = correct.sort();
+                    const isEqual = JSON.stringify(sortedSelected) === JSON.stringify(sortedCorrect);
+                    if (isEqual) {
+                        score++;
+                        questionDiv.classList.add('correct');
+                    } else {
+                        questionDiv.classList.add('incorrect');
+                    }
+                }
+
+                // Highlight correct answers
+                correct.forEach(correctAns => {
+                    const escapedCorrectAns = correctAns.replace(/([!"#$%&'()*+,.\\/:;<=>?@[\\\]^`{|}~])/g, '\\$1');
+                    const correctLabel = questionDiv.querySelector(`label[for="q${key}_${escapedCorrectAns.replace(/\\s/g, '_')}"]`);
+                    if (correctLabel) {
+                        correctLabel.parentElement.classList.add('correct-answer');
+                    }
+                });
+            }
+
+            document.querySelector(`#${testId} .score`).textContent =
+                `Your score is: ${score} out of ${Object.keys(correctAnswers).length}`;
+        }
+    </script>
+</head>
+<body>
+    <h1>Random Scoped Exam Test 8</h1>
+    <p style="text-align:center; font-size: 0.9em; color: gray;">
+        Generated on 2025-10-22_15-53-53 (Seed: 42)
+    </p>
+    <div id="test1" class="test-container">
+        <div class="score">Your score is: 0 out of 5</div>
+
+        <div class="question" data-question="1">
+            <b>Question 1: What options are available to define the fulfilment process for a service catalogue item?</b>
+            <br><i>Select 3 Answers from the below options.</i>
+            <div class="metadata">Exam 1 | Question 25 | Difficulty: Easy | Domain: Self-Service & Automation</div>
+            <div class="options">
+        
+                    <div>
+                        <input type="checkbox" name="question1" id="q1_Plan" value="Plan">
+                        <div class="label-container">
+                            <label for="q1_Plan">Plan</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="checkbox" name="question1" id="q1_Workflow" value="Workflow">
+                        <div class="label-container">
+                            <label for="q1_Workflow">Workflow</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="checkbox" name="question1" id="q1_Execution_Plan" value="Execution Plan">
+                        <div class="label-container">
+                            <label for="q1_Execution_Plan">Execution Plan</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="checkbox" name="question1" id="q1_Roadmap" value="Roadmap">
+                        <div class="label-container">
+                            <label for="q1_Roadmap">Roadmap</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="checkbox" name="question1" id="q1_Flow" value="Flow">
+                        <div class="label-container">
+                            <label for="q1_Flow">Flow</label>
+                        </div>
+                    </div>
+                </div></div>
+        <div class="question" data-question="2">
+            <b>Question 2: Which application provides a centralised location for creating, categorising, viewing, and governing information related to the flow of work through ServiceNow?</b>
+            
+            <div class="metadata">Exam 1 | Question 7 | Difficulty: Easy | Domain: Self-Service & Automation</div>
+            <div class="options">
+        
+                    <div>
+                        <input type="radio" name="question2" id="q2_Data_Separation" value="Data Separation">
+                        <div class="label-container">
+                            <label for="q2_Data_Separation">Data Separation</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question2" id="q2_Performance_Analytics" value="Performance Analytics">
+                        <div class="label-container">
+                            <label for="q2_Performance_Analytics">Performance Analytics</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question2" id="q2_Configuration_Management" value="Configuration Management">
+                        <div class="label-container">
+                            <label for="q2_Configuration_Management">Configuration Management</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question2" id="q2_Knowledge_Management" value="Knowledge Management">
+                        <div class="label-container">
+                            <label for="q2_Knowledge_Management">Knowledge Management</label>
+                        </div>
+                    </div>
+                </div></div>
+        <div class="question" data-question="3">
+            <b>Question 3: When configuring an email notification, where can you choose field values from the record to include within the message?</b>
+            
+            <div class="metadata">Exam 2 | Question 34 | Difficulty: Medium | Domain: Configuring Applications for Collaboration</div>
+            <div class="options">
+        
+                    <div>
+                        <input type="radio" name="question3" id="q3_Platform_variables" value="Platform variables">
+                        <div class="label-container">
+                            <label for="q3_Platform_variables">Platform variables</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question3" id="q3_Select_fields_pane" value="Select fields pane">
+                        <div class="label-container">
+                            <label for="q3_Select_fields_pane">Select fields pane</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question3" id="q3_Select_variables" value="Select variables">
+                        <div class="label-container">
+                            <label for="q3_Select_variables">Select variables</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question3" id="q3_Variables_context_menu" value="Variables context menu">
+                        <div class="label-container">
+                            <label for="q3_Variables_context_menu">Variables context menu</label>
+                        </div>
+                    </div>
+                </div></div>
+        <div class="question" data-question="4">
+            <b>Question 4: What form action updates an existing record and keeps the form open?</b>
+            
+            <div class="metadata">Exam 2 | Question 50 | Difficulty: Easy | Domain: Configuring Applications for Collaboration</div>
+            <div class="options">
+        
+                    <div>
+                        <input type="radio" name="question4" id="q4_Save" value="Save">
+                        <div class="label-container">
+                            <label for="q4_Save">Save</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question4" id="q4_Insert" value="Insert">
+                        <div class="label-container">
+                            <label for="q4_Insert">Insert</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question4" id="q4_Update" value="Update">
+                        <div class="label-container">
+                            <label for="q4_Update">Update</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question4" id="q4_Insert_and_Stay" value="Insert and Stay">
+                        <div class="label-container">
+                            <label for="q4_Insert_and_Stay">Insert and Stay</label>
+                        </div>
+                    </div>
+                </div></div>
+        <div class="question" data-question="5">
+            <b>Question 5: Which ServiceNow product enables you to integrate with 3rd party applications without scripting?</b>
+            
+            <div class="metadata">Exam 2 | Question 45 | Difficulty: Easy | Domain: Data Migration and Integration</div>
+            <div class="options">
+        
+                    <div>
+                        <input type="radio" name="question5" id="q5_Visual_Task_Boards" value="Visual Task Boards">
+                        <div class="label-container">
+                            <label for="q5_Visual_Task_Boards">Visual Task Boards</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question5" id="q5_Service_Portal" value="Service Portal">
+                        <div class="label-container">
+                            <label for="q5_Service_Portal">Service Portal</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question5" id="q5_Flow_Designer" value="Flow Designer">
+                        <div class="label-container">
+                            <label for="q5_Flow_Designer">Flow Designer</label>
+                        </div>
+                    </div>
+                
+                    <div>
+                        <input type="radio" name="question5" id="q5_Integration_Hub" value="Integration Hub">
+                        <div class="label-container">
+                            <label for="q5_Integration_Hub">Integration Hub</label>
+                        </div>
+                    </div>
+                </div></div>
+        <button onclick="checkAnswers('test1')">Check Answers</button>
+    </div>
+</body>
+</html>
+    

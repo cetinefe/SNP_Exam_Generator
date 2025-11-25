@@ -35,13 +35,18 @@ def validate_csv_structure(sheet_data):
     return sheet_data
 
 
-def generate_exam_html(csv_file_path, output_dir, sample_size=40):
+def generate_exam_html(csv_file_path, output_dir, sample_size=40, seed=None):
     """Main logic to read CSV, sample questions, and generate HTML exam."""
     try:
         os.makedirs(output_dir, exist_ok=True)
 
         if not os.path.exists(csv_file_path):
             raise FileNotFoundError(f"CSV file not found: {csv_file_path}")
+
+        # Apply reproducible random seed
+        if seed is not None:
+            random.seed(seed)
+            print(f"🧬 Using random seed: {seed}")
 
         # Read CSV
         sheet_data = pd.read_csv(csv_file_path)
@@ -61,8 +66,8 @@ def generate_exam_html(csv_file_path, output_dir, sample_size=40):
         if len(sheet_data) < sample_size:
             sample_size = len(sheet_data)
 
-        # Random sample of questions
-        questions = sheet_data.sample(sample_size).copy()
+        # Random sample of questions (reproducible if seed is set)
+        questions = sheet_data.sample(sample_size, random_state=seed).copy()
 
         # Update exam number and occurrence
         sheet_data.loc[questions.index, "Occurrence"] = sheet_data.loc[questions.index, "Occurrence"].fillna(0) + 1
@@ -79,19 +84,19 @@ def generate_exam_html(csv_file_path, output_dir, sample_size=40):
         )
 
         # Generate HTML content
-        html_content = create_html_content(questions, new_exam_number, timestamp)
+        html_content = create_html_content(questions, new_exam_number, timestamp, seed)
 
         with open(output_html_path, 'w', encoding='utf-8') as file:
             file.write(html_content)
 
-        print(f"✅ HTML file successfully written to:\n{output_html_path}")
+        print(f"\n✅ HTML file successfully written to:\n{output_html_path}")
 
     except Exception as e:
         log_error(e)
         raise
 
 
-def create_html_content(questions, new_exam_number, timestamp):
+def create_html_content(questions, new_exam_number, timestamp, seed):
     """Create HTML content for the exam."""
     correct_answers_dict = {}
     question_option_map = {}
@@ -102,7 +107,7 @@ def create_html_content(questions, new_exam_number, timestamp):
             answers = [ans.strip() for ans in str(row['Correct Answers & Selections']).split('+')]
             correct_answers_dict[str(i)] = answers
 
-        # Shuffle the Selections
+        # Shuffle the Selections (reproducible if seed is set)
         if pd.notna(row['Selections']):
             options = [opt.strip() for opt in str(row['Selections']).split('+')]
             random.shuffle(options)
@@ -187,7 +192,9 @@ def create_html_content(questions, new_exam_number, timestamp):
 </head>
 <body>
     <h1>Random Scoped Exam Test {new_exam_number}</h1>
-    <p style="text-align:center; font-size: 0.9em; color: gray;">Generated on {timestamp}</p>
+    <p style="text-align:center; font-size: 0.9em; color: gray;">
+        Generated on {timestamp} {'(Seed: ' + str(seed) + ')' if seed is not None else ''}
+    </p>
     <div id="test1" class="test-container">
         <div class="score">Your score is: 0 out of {len(questions)}</div>
 """
@@ -242,9 +249,10 @@ def main():
     parser.add_argument('--csv', '-c', required=True, help='Path to CSV file')
     parser.add_argument('--output', '-o', default='output', help='Output directory for HTML files')
     parser.add_argument('--sample-size', '-n', type=int, default=40, help='Number of questions to sample')
+    parser.add_argument('--seed', '-s', type=int, help='Optional random seed for reproducibility')
     args = parser.parse_args()
     try:
-        generate_exam_html(args.csv, args.output, args.sample_size)
+        generate_exam_html(args.csv, args.output, args.sample_size, args.seed)
     except Exception as e:
         log_error(e)
         sys.exit(1)
